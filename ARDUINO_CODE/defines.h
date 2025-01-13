@@ -8,7 +8,7 @@
 #endif
 
 // comment out if you own a Arduino uno! or other smaller board
-#define ARDUINO_MEGA
+//#define ARDUINO_MEGA
 
 // Comment out if you want MPG in US form, not UK
 #define REGION_UK
@@ -22,3 +22,6 @@
 
 // Steering wheel button press detections
 #define WHEEL_BUTTON_LONG_PRESS_MS 1000 // If button is held down for this long then its registered as a long tap
+
+// Manual Gearbox definition(comment out if automatic)
+#define MANUAL_GEARBOX

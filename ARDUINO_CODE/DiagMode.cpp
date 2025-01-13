@@ -16,7 +16,7 @@ void DIAG_MODE::updateUI() {
         break;
     case 2:
         display->setHeader("Tar/Cur gear", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getGearing(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getGearingAuto(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
         break;
     case 3:
         display->setHeader("ATF Temp", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);

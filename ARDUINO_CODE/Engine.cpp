@@ -23,6 +23,12 @@ void ENGINE_DATA::readFrame(can_frame *f) {
     } else if (f->can_id == 0x000C) {
         speed_km = f->data[1];
     } 
+    else if (f->can_id == 0x0002) {
+        rpm = (int) (f->data[3] << 8) | (f->data[4]);
+    }
+    else if (f->can_id == 0x0240) {
+        ReverseEngaged = uint8_t(((f->data[1]) & 0b00100000) >> 5);
+    }
 }
 
 const char* ENGINE_DATA::getTransmissionTemp() {
@@ -37,7 +43,7 @@ const char* ENGINE_DATA::getTransmissionTemp() {
     }
 }
 
-const char* ENGINE_DATA::getGearing() {
+const char* ENGINE_DATA::getGearingAuto() {
     if (this->engineOn == false) {
         return ENGINE_OFF;
     }
@@ -64,6 +70,39 @@ const char* ENGINE_DATA::getGearing() {
     }
 }
 
+#ifdef MANUAL_GEARBOX
+const char* ENGINE_DATA::getGearingManual() {
+    if (this->engineOn == false) {
+        return ENGINE_OFF;
+    }
+    if(ReverseEngaged == 0x01){
+        return GEAR_REVERSE;
+    }
+    else{
+      memset(buffer, 0x00, sizeof(buffer));
+      // Check each gear to see if the measured RPM matches the calculated RPM
+      int detectedGear = -1;
+      for (int gear = 1; gear <= numGears; gear++) {
+          // Calculate expected engine RPM for this gear
+          float calculatedRPM = this->speed_km / 1000 / 60 / wheelDiameterMeters / 3.14159 * gearRatios[gear] * finalDriveRatio;
+          // Check if measured RPM is within the margin
+          if (fabs(this->rpm - calculatedRPM) <= rpmMargin) {
+              detectedGear = gear;
+              break;
+          }
+      }
+      if(detectedGear>0){
+        sprintf(buffer, "%d", actualGear);
+        return buffer;
+      }
+      else{
+      return GEAR_NEUTRAL;
+      }
+      
+    }
+    
+}
+#endif
 
 const char* ENGINE_DATA::getIntakeTemp() {
     if (this->engineOn == false) {

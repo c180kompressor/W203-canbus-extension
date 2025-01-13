@@ -11,12 +11,15 @@
 const char * const PROGMEM ENGINE_OFF = "Engine off";
 const char * const PROGMEM UNKNOWN_VAL = "Unknown";
 
-const char * const PROGMEM GEAR_PARK = "Park";
+
 const char * const PROGMEM GEAR_NEUTRAL = "Neutral";
 const char * const PROGMEM GEAR_REVERSE = "Reverse";
+
+#ifndef MANUAL_GEARBOX
+const char * const PROGMEM GEAR_PARK = "Park";
 const char * const PROGMEM GEAR_REVERSE_2 = "Reverse 2";
 
-#ifdef MANUAL_GEARBOX
+#else
   // Vehicle parameters
   const float PROGMEM finalDriveRatio = 3.27;         // Final drive ratio (replace with your own)(https://www.automobile-catalog.com/)
   const float PROGMEM wheelDiameterMeters = 0.635;    // Wheel diameter (calculate based on tyre)(https://tiresize.com/calculator/)

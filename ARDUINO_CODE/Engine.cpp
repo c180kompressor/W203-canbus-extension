@@ -7,30 +7,46 @@ ENGINE_DATA::ENGINE_DATA() {
 
 void ENGINE_DATA::readFrame(can_frame *f) {
     this->engineOn = true;
-    if (f->can_id == 0x0418) {
-        this->transmission_temp = uint8_t(f->data[2]) - 40;
-        this->actualGear = (f->data[4]) & 0b00001111;
-        this->targetGear = ((f->data[4]) & 0b11110000) >> 4;
-    } else if (f->can_id == 0x608) {
+    if (f->can_id == 0x608) {
         this->coolant_temp = uint8_t(f->data[0]);
         this->intake_temp = uint8_t(f->data[1]);
         this->consumption = (int) (f->data[5] << 8) | (f->data[6]);
         if (this->consumption < 0) {
             this->consumption = 0;
         }
-    } else if (f->can_id == 0x0308) {
+    }
+    #ifndef MANUAL_GEARBOX
+        else if (f->can_id == 0x0418) {
+            this->transmission_temp = uint8_t(f->data[2]) - 40;
+            this->actualGear = (f->data[4]) & 0b00001111;
+            this->targetGear = ((f->data[4]) & 0b11110000) >> 4;
+        }
+    #else
+        else if (f->can_id == 0x0002) {
+            rpm = (int) (f->data[3] << 8) | (f->data[4]);
+        }
+        else if (f->can_id == 0x0240) {
+            ReverseEngaged = uint8_t(((f->data[1]) & 0b00100000) >> 5);
+        }
+    #endif 
+    else if (f->can_id == 0x608) {
+        this->coolant_temp = uint8_t(f->data[0]);
+        this->intake_temp = uint8_t(f->data[1]);
+        this->consumption = (int) (f->data[5] << 8) | (f->data[6]);
+        if (this->consumption < 0) {
+            this->consumption = 0;
+        }
+    }
+     else if (f->can_id == 0x0308) {
         this->oil_temp = uint8_t(f->data[5]);
-    } else if (f->can_id == 0x000C) {
+    }
+     else if (f->can_id == 0x000C) {
         speed_km = f->data[1];
     } 
-    else if (f->can_id == 0x0002) {
-        rpm = (int) (f->data[3] << 8) | (f->data[4]);
-    }
-    else if (f->can_id == 0x0240) {
-        ReverseEngaged = uint8_t(((f->data[1]) & 0b00100000) >> 5);
-    }
+    
 }
 
+#ifndef MANUAL_GEARBOX
 const char* ENGINE_DATA::getTransmissionTemp() {
     if (this->engineOn == false) {
         return ENGINE_OFF;
@@ -70,7 +86,8 @@ const char* ENGINE_DATA::getGearingAuto() {
     }
 }
 
-#ifdef MANUAL_GEARBOX
+#else
+
 const char* ENGINE_DATA::getGearingManual() {
     if (this->engineOn == false) {
         return ENGINE_OFF;

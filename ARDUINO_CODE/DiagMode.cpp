@@ -14,6 +14,16 @@ void DIAG_MODE::updateUI() {
         display->setHeader("DIAG MODE", IC_TEXT_FMT_CENTER_JUSTIFICATION | IC_TEXT_FMT_FLASHING , 2000);
         display->setBody("SCROLL", IC_TEXT_FMT_CENTER_JUSTIFICATION | IC_TEXT_FMT_FLASHING , 250);
         break;
+    #ifdef MANUAL_GEARBOX
+    case 2:
+        display->setHeader("Est Gear", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
+        display->setBody(engine->getGearingManual(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        break;
+    case 3:
+        display->setHeader("GearBox Temp", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
+        display->setBody("--", IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        break;
+    #else
     case 2:
         display->setHeader("Tar/Cur gear", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
         display->setBody(engine->getGearingAuto(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
@@ -22,6 +32,7 @@ void DIAG_MODE::updateUI() {
         display->setHeader("ATF Temp", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
         display->setBody(engine->getTransmissionTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
         break;
+    #endif
     case 4:
         display->setHeader("Oil Temp", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
         display->setBody(engine->getOilTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);

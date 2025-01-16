@@ -99,12 +99,13 @@ void IC_DISPLAY::setBodyTel(uint8_t numStrs, const char* lines[]){
 }
 
 void IC_DISPLAY::processIcResponse(can_frame *r) {
-    if (r->can_id == 0x1D0) {
+     if (r->can_id == 0x1D0) {
         DPRINTLN(IC_TO_AGW_STR+*canB->frame_to_string(r, false));
         // Some data relating to navigation sent to AGW
         if (r->data[0] == 0x06 && r->data[2] == 0x27) {
             // Audio Page
             if (r->data[1] == 0x03 && r->data[6] == 0xC4) { // Move in
+                Serial.println("we are on audio page");
                 current_page = IC_PAGE_AUDIO;
             }
             else if (r->data[1] == 0x03 && r->data[6] == 0xC3) { // Move out
@@ -113,9 +114,11 @@ void IC_DISPLAY::processIcResponse(can_frame *r) {
 
             // Telephone page
             if (r->data[1] == 0x05 && r->data[6] == 0xC2) { // Move in
+                Serial.println("we are on telephone page");
                 current_page = IC_PAGE_TELEPHONE;
             }
             else if (r->data[1] == 0x05 && r->data[6] == 0xC1) { // Move out
+                Serial.println("we are on other page");
                 current_page = IC_PAGE_OTHER;
             }
         }
@@ -131,7 +134,8 @@ void IC_DISPLAY::initPage(uint8_t p, const char* header, uint8_t fmt, uint8_t up
     buffer[1] = 0x24; // Package 24 (Init page)
     buffer[2] = 0x02;
     buffer[3] = 0x60;
-    buffer[4] = 0x00;
+    //buffer[4] = 0x00;
+    buffer[4] = 0x01;
     buffer[5] = numLines;
     buffer[6] = 0x00;
     buffer[7] = 0x00;

@@ -69,17 +69,19 @@ void doLightShow() {
 }
 
 void setup() {
-    pinMode(4, OUTPUT);
-    pinMode(5, OUTPUT);
+    Serial.println("start setup");
+    pinMode(8, OUTPUT);
+    pinMode(10, OUTPUT);
     Serial.begin(115200);
     SPI.begin();
-    canC = new CANBUS_COMMUNICATOR(4, CAN_500KBPS, CAN_C_DEF);
+    canC = new CANBUS_COMMUNICATOR(10, CAN_500KBPS, CAN_C_DEF);
     delay(100);
-    canB = new CANBUS_COMMUNICATOR(5, CAN_83K3BPS, CAN_B_DEF);
+    canB = new CANBUS_COMMUNICATOR(8, CAN_83K3BPS, CAN_B_DEF);
+    //Serial.println("done!");
     #ifdef ARDUINO_MEGA
-    bt = new BLUETOOTH();
+    //bt = new BLUETOOTH();
     #else
-    bt = new BLUETOOTH(6, 7);
+    //bt = new BLUETOOTH(6, 7);
     #endif
     ic = new IC_DISPLAY(canB);
     audio = new AUDIO_DISPLAY(ic);
@@ -115,11 +117,14 @@ void HandleBluetoothRequest() {
 void handleFrameRead() {
     can_frame *readB = canB->read_frame();
     if (readB->can_dlc != 0) {
+      //Serial.println("procesing frame");
         ic->processIcResponse(readB);
         handleKeyInputs(readB);
-        if (readB->can_id == 0x0002 || readB->can_dlc == 0x000C) {
+        if ((readB->can_id == 0x0002 || readB->can_dlc == 0x000C) && showDiagMode) {
+            //Serial.println("read diag ecu frame");
             eng->readFrame(readB);
         } else if (readB->can_id == 0x0000) {
+            //Serial.println("read non diag ecus");
             if ((readB->data[0] & 0b000000001) > 0) {
                 CAR_SLEEP = false;
             } else {
@@ -129,7 +134,8 @@ void handleFrameRead() {
 
     }
     can_frame *read = canC->read_frame();
-    if (read->can_dlc != 0) {
+    if (read->can_dlc != 0 && showDiagMode) {
+      //Serial.println("processin canc frame");
         eng->readFrame(read);
     }
 }
@@ -141,12 +147,15 @@ void handleKeyInputs(can_frame *f) {
         if (showDiagMode) {
             switch(wheel_controls->getPressed(f)) {
                 case BUTTON_ARROW_UP:
+                    Serial.println("up key pressed");
                     diag->nextDiagPage();
                     break;
                 case BUTTON_ARROW_DOWN:
+                    Serial.println("down pressed");
                     diag->prevDiagPage();
                     break;
                 case BUTTON_TEL_DEC:
+                    Serial.println("tel dec key pressed diag mode ended");
                     showDiagMode = false;
                     // Mega has enough RAM to keep these in memory, uno doesn't
                     #ifndef ARDUINO_MEGA
@@ -162,12 +171,15 @@ void handleKeyInputs(can_frame *f) {
         else {
             switch(wheel_controls->getPressed(f)) {
                 case BUTTON_ARROW_UP:
-                    bt->write_message(NEXT_TRACK_CMD, 1);
+                    Serial.println("up key pressed");
+                    //bt->write_message(NEXT_TRACK_CMD, 1);
                     break;
                 case BUTTON_ARROW_DOWN:
-                    bt->write_message(PREV_TRACK_CMD, 1);
+                    Serial.println("down pressed");
+                    //bt->write_message(PREV_TRACK_CMD, 1);
                     break;
                 case BUTTON_TEL_ANS:
+                    Serial.println("tel key pressed diag mode started");
                     #ifndef ARDUINO_MEGA
                     eng = new ENGINE_DATA();
                     diag = new DIAG_MODE(audio, eng);
@@ -181,16 +193,33 @@ void handleKeyInputs(can_frame *f) {
     } 
     // Telephone screen
     else if (ic->current_page == 0x05) {
-
+      Serial.println("we are in tel page");
+        #ifdef AMG_MENU
+          // write here phone update function for amg menu
+        #endif
+        switch(wheel_controls->getPressed(f)) {
+            case BUTTON_TEL_ANS:
+                Serial.println("tel page tel button");
+                //bt->write_message(NEXT_TRACK_CMD, 1); // Use telephone Answer button to seek track
+                break;
+            case BUTTON_TEL_DEC:
+                Serial.println("tel page tel dec button");
+                //bt->write_message(PREV_TRACK_CMD, 1); // Use telephone decline button to repeat track
+                break;
+            default:
+                break;
+        }
     }
     // Other screen - Here the Arrows / Page buttons are used so we can only use the telephone buttons 
     else {
         switch(wheel_controls->getPressed(f)) {
             case BUTTON_TEL_ANS:
-                bt->write_message(NEXT_TRACK_CMD, 1); // Use telephone Answer button to seek track
+                Serial.println("other page tel button");
+                //bt->write_message(NEXT_TRACK_CMD, 1); // Use telephone Answer button to seek track
                 break;
             case BUTTON_TEL_DEC:
-                bt->write_message(PREV_TRACK_CMD, 1); // Use telephone decline button to repeat track
+                Serial.println("other page tel dec button");
+                //bt->write_message(PREV_TRACK_CMD, 1); // Use telephone decline button to repeat track
                 break;
             default:
                 break;
@@ -201,7 +230,7 @@ void handleKeyInputs(can_frame *f) {
 void loop() {
     // Dont need to do any of this if we are asleep
     if (!CAR_SLEEP) {
-        HandleBluetoothRequest();
+        //HandleBluetoothRequest();
         audio->update();
         musicdata->update();
         if (showDiagMode) {
@@ -212,7 +241,8 @@ void loop() {
     }
     handleFrameRead();
     if (CAR_SLEEP) {
-        delay(2000);
+        delay(1000);
+        Serial.println("car sleep");
     }
     #ifdef DEBUG
     if (millis() - lastMemTime > 2000) {

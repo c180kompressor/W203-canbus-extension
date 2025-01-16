@@ -62,35 +62,45 @@ void MUSIC::update() {
 }
 
 
+// void MUSIC::updateUI() {
+//     if (millis() - lastUIUpdate >= 1000) {
+//         lastUIUpdate = millis();
+
+//         if (strlen(track) == 0) {
+//             displayPage->setSymbols(IC_SYMB_UP_ARROW, IC_SYMB_DOWN_ARROW);
+//             displayPage->setHeader("No Connect.", IC_TEXT_FMT_CENTER_JUSTIFICATION, 5000);
+//             displayPage->setBody("Open app", IC_TEXT_FMT_HIGHLIGHTED | IC_TEXT_FMT_CENTER_JUSTIFICATION, 5000);
+//             return;
+//         }
+
+
+//         if (this->playing) {
+//             displayPage->setSymbols(IC_SYMB_SKIP_TRACK, IC_SYMB_PREV_TRACK);
+//             displayPage->setBody(track, IC_TEXT_FMT_CENTER_JUSTIFICATION, 5000);
+//             if (totalMillis > 0) {
+//                 char prog_buffer[12];
+//                 uint8_t elapsed_mins = getElapsedSec() / 60;
+//                 uint8_t elapsed_secs = getElapsedSec() % 60;
+//                 uint8_t total_mins = getDurationSec() / 60;
+//                 uint8_t total_secs = getDurationSec() % 60;
+//                 sprintf(prog_buffer, "%d:%02d/%d:%02d", elapsed_mins, elapsed_secs, total_mins, total_secs);
+//                 displayPage->setHeader(prog_buffer, IC_TEXT_FMT_LEFT_JUSTIFICATION, 1000);
+//             } else {
+//                 displayPage->setHeader(unknown_duration, IC_TEXT_FMT_HIGHLIGHTED, 5000);
+//             }
+//         } else {
+//             displayPage->setSymbols(IC_SYMB_PLAY, IC_SYMB_NONE);
+//             displayPage->setHeader(paused_text, IC_TEXT_FMT_CENTER_JUSTIFICATION | IC_TEXT_FMT_FLASHING, 5000);
+//         }
+//     }
+// }
+
 void MUSIC::updateUI() {
-    if (millis() - lastUIUpdate >= 1000) {
-        lastUIUpdate = millis();
-
-        if (strlen(track) == 0) {
+            //Serial.println("set symbols");
+            //Serial.println("set header");
+            displayPage->setHeader("AUX/BT", IC_TEXT_FMT_CENTER_JUSTIFICATION, 2000);
             displayPage->setSymbols(IC_SYMB_NONE, IC_SYMB_NONE);
-            displayPage->setHeader("No Connect.", IC_TEXT_FMT_CENTER_JUSTIFICATION, 5000);
-            displayPage->setBody("Open app", IC_TEXT_FMT_HIGHLIGHTED | IC_TEXT_FMT_CENTER_JUSTIFICATION, 5000);
+            //Serial.println("set body");
+            displayPage->setBody("No Conn.", IC_TEXT_FMT_HIGHLIGHTED | IC_TEXT_FMT_CENTER_JUSTIFICATION, 2000);
             return;
-        }
-
-
-        if (this->playing) {
-            displayPage->setSymbols(IC_SYMB_SKIP_TRACK, IC_SYMB_PREV_TRACK);
-            displayPage->setBody(track, IC_TEXT_FMT_CENTER_JUSTIFICATION, 5000);
-            if (totalMillis > 0) {
-                char prog_buffer[12];
-                uint8_t elapsed_mins = getElapsedSec() / 60;
-                uint8_t elapsed_secs = getElapsedSec() % 60;
-                uint8_t total_mins = getDurationSec() / 60;
-                uint8_t total_secs = getDurationSec() % 60;
-                sprintf(prog_buffer, "%d:%02d/%d:%02d", elapsed_mins, elapsed_secs, total_mins, total_secs);
-                displayPage->setHeader(prog_buffer, IC_TEXT_FMT_LEFT_JUSTIFICATION, 1000);
-            } else {
-                displayPage->setHeader(unknown_duration, IC_TEXT_FMT_HIGHLIGHTED, 5000);
-            }
-        } else {
-            displayPage->setSymbols(IC_SYMB_PLAY, IC_SYMB_NONE);
-            displayPage->setHeader(paused_text, IC_TEXT_FMT_CENTER_JUSTIFICATION | IC_TEXT_FMT_FLASHING, 5000);
-        }
-    }
 }

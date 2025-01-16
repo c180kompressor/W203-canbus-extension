@@ -26,7 +26,7 @@ CanbusComm::CanbusComm(int pinCanB, int pinCanC) {
     // Can C MCP2515
     this->canC = new MCP2515(pinCanC);
     this->setCanC();
-    this->canC->setBitrate(CAN_500KBPS, MCP_8MHZ);
+    this->canC->setBitrate(CAN_500KBPS);
     this->canC->setNormalMode();
     this->canCPin = pinCanC;
     this->frameString = "";

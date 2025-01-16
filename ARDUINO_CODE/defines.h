@@ -1,4 +1,4 @@
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
   #define DPRINT(...) Serial.print(__VA_ARGS__)
   #define DPRINTLN(...) Serial.println(__VA_ARGS__)
@@ -25,3 +25,6 @@
 
 // Manual Gearbox definition(comment out if automatic)
 #define MANUAL_GEARBOX
+
+// AMG MENU (Diag mode in Telephone page on 4 lines) (have not tried it yet)
+//#define AMG_MENU

@@ -34,6 +34,7 @@ uint8_t WHEEL_CONTROLS::getPressed(can_frame *f) {
             }
             // Short key tap 
             else {
+                //Serial.println("key pressed");
                 tmp = last_registered;
                 last_registered = BUTTON_NONE;
                 return tmp;

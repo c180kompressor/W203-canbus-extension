@@ -23,20 +23,24 @@ void ENGINE_DATA::readFrame(can_frame *f) {
         }
     #else
         else if (f->can_id == 0x0002) {
-            rpm = (int) (f->data[3] << 8) | (f->data[4]);
+            //Serial.println(f->data[3]);
+            //Serial.println(f->data[4]);
+            rpm = (int) ((f->data[3] << 8) | (f->data[4]));
+            //Serial.println(rpm);
         }
         else if (f->can_id == 0x0240) {
             ReverseEngaged = uint8_t(((f->data[1]) & 0b00100000) >> 5);
+            //Serial.println(ReverseEngaged);
         }
     #endif 
-    else if (f->can_id == 0x608) {
-        this->coolant_temp = uint8_t(f->data[0]);
-        this->intake_temp = uint8_t(f->data[1]);
-        this->consumption = (int) (f->data[5] << 8) | (f->data[6]);
-        if (this->consumption < 0) {
-            this->consumption = 0;
-        }
-    }
+    // else if (f->can_id == 0x608) {
+    //     this->coolant_temp = uint8_t(f->data[0]);
+    //     this->intake_temp = uint8_t(f->data[1]);
+    //     this->consumption = (int) (f->data[5] << 8) | (f->data[6]);
+    //     if (this->consumption < 0) {
+    //         this->consumption = 0;
+    //     }
+    // }
      else if (f->can_id == 0x0308) {
         this->oil_temp = uint8_t(f->data[5]);
     }
@@ -166,24 +170,45 @@ const char* ENGINE_DATA::getMPG() {
     if (millis() - lastMpgTime >= 1000) {
         lastMpgTime = millis();
         if (this->speed_km == 0) {
-            sprintf(buffer, "0.0 MPG"); 
+            sprintf(buffer, "Inf l/100"); 
         } else if (this->consumption == 0) {
-            sprintf(buffer, "Inf MPG");
+            sprintf(buffer, "0.0 l/100");
         } else {
             float l_per_hour = 3600.0 * (this->consumption / 1000000.0);
-            float km_l = this->speed_km / l_per_hour;
-            #ifdef REGION_UK
-                float mpg = km_l * 2.82481; // Miles per gallon (UK)
-            #else
-                float mpg = km_l * 2.35215; // Miles per gallon (US)
-            #endif
+            float l_per_100_km = l_per_hour / this->speed_km * 100.0;
             char str[7];
-            dtostrf(mpg, 5, 1, str);
-            sprintf(buffer, "%s MPG", str);
+            dtostrf(l_per_100_km, 5, 1, str);
+            sprintf(buffer, "%s l/100", str);
         }
     }
     return buffer;
 }
+
+// const char* ENGINE_DATA::getMPG() {
+//     if (!this->engineOn) {
+//         return ENGINE_OFF;
+//     }
+//     if (millis() - lastMpgTime >= 1000) {
+//         lastMpgTime = millis();
+//         if (this->speed_km == 0) {
+//             sprintf(buffer, "0.0 MPG"); 
+//         } else if (this->consumption == 0) {
+//             sprintf(buffer, "Inf MPG");
+//         } else {
+//             float l_per_hour = 3600.0 * (this->consumption / 1000000.0);
+//             float km_l = this->speed_km / l_per_hour;
+//             #ifdef REGION_UK
+//                 float mpg = km_l * 2.82481; // Miles per gallon (UK)
+//             #else
+//                 float mpg = km_l * 2.35215; // Miles per gallon (US)
+//             #endif
+//             char str[7];
+//             dtostrf(mpg, 5, 1, str);
+//             sprintf(buffer, "%s MPG", str);
+//         }
+//     }
+//     return buffer;
+// }
 
 
 const char* ENGINE_DATA::getOilTemp() {

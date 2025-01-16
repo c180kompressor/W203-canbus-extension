@@ -22,7 +22,7 @@ void Audio_Page::update() {
             // audio unit will override our display!
             DPRINTLN(F("INIT AUDIO PAGE"));
             isInPage = true;
-            display->initPage(IC_DISPLAY::DISPLAY_PAGE::AUDIO, IC_DISPLAY::SYMBOL::UP_ARROW, IC_DISPLAY::SYMBOL::DOWN_ARROW, true, "TEST");
+            display->initPage(IC_DISPLAY::DISPLAY_PAGE::AUDIO, IC_DISPLAY::SYMBOL::UP_ARROW, IC_DISPLAY::SYMBOL::DOWN_ARROW, true, "IVANK");
             /*
             if (!isScrolling) {
                 display->setbodyText(IC_DISPLAY::DISPLAY_PAGE::AUDIO, true, bodyText, NULL, NULL, NULL);

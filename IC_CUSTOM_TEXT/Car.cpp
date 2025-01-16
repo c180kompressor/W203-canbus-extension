@@ -187,17 +187,17 @@ void Car::drawMusicProgress() {
 
 void Car::loop() {
     audio->update();
-    if(!isLocked) {
-        processBluetoothRequest();
-        /*if (phoneConnected) {
-            music->update();
-            drawMusicProgress();
-        }
-        */
-        processCanFrame();
-    } else {
-        processCanFrame();
-    }
+    // if(!isLocked) {
+    //     processBluetoothRequest();
+    //     /*if (phoneConnected) {
+    //         music->update();
+    //         drawMusicProgress();
+    //     }
+    //     */
+    //     processCanFrame();
+    // } else {
+    //     processCanFrame();
+    // }
 }
 
 void Car::soundHorn() {

@@ -17,7 +17,7 @@ void DIAG_MODE::updateUI() {
     {
     case 1:
         display->setHeader("DIAG MODE", IC_TEXT_FMT_CENTER_JUSTIFICATION , 2000);
-        display->setBody("SCROLL", IC_TEXT_FMT_CENTER_JUSTIFICATION | IC_TEXT_FMT_HIGHLIGHTED , 250);
+        display->setBody("SCROLL", IC_TEXT_FMT_CENTER_JUSTIFICATION | IC_TEXT_FMT_HIGHLIGHTED , 1000);
         break;
     case 2:
         display->setHeader("Est Gear", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
@@ -25,23 +25,23 @@ void DIAG_MODE::updateUI() {
         break;
     case 3:
         display->setHeader("BATT V", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getVBatt(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getVBatt(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 500);
         break;
     case 4:
         display->setHeader("Eng Temp", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getCoolantTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getCoolantTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 1000);
         break;
     case 5:
         display->setHeader("Oil Temp", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getOilTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getOilTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 1000);
         break;
     case 6:
         display->setHeader("MAF Temp", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getIntakeTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getIntakeTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 1000);
         break;
     case 7:
         display->setHeader("Fuel usage", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getConsumption(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getConsumption(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 500);
         break;
     case 8:
         #ifdef REGION_UK
@@ -51,11 +51,11 @@ void DIAG_MODE::updateUI() {
         #else
             display->setHeader("INST CONS", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
         #endif
-        display->setBody(engine->getMPG(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getMPG(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 500);
         break;
     case 9:
         display->setHeader("Oil Level", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getOilLevel(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getOilLevel(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 500);
     default:
         break;
     }
@@ -67,7 +67,7 @@ void DIAG_MODE::updateUI() {
     {
     case 1:
         display->setHeader("DIAG MODE", IC_TEXT_FMT_CENTER_JUSTIFICATION , 2000);
-        display->setBody("SCROLL", IC_TEXT_FMT_CENTER_JUSTIFICATION | IC_TEXT_FMT_HIGHLIGHTED , 250);
+        display->setBody("SCROLL", IC_TEXT_FMT_CENTER_JUSTIFICATION | IC_TEXT_FMT_HIGHLIGHTED , 1000);
         break;
     case 2:
         display->setHeader("Tar/Cur gear", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
@@ -75,27 +75,27 @@ void DIAG_MODE::updateUI() {
         break;
     case 3:
         display->setHeader("ATF Temp", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getTransmissionTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getTransmissionTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 1000);
         break;
     case 4:
         display->setHeader("Oil Temp", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getOilTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getOilTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 1000);
         break;
     case 5:
         display->setHeader("BATT V", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getVBatt(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getVBatt(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 500);
         break; 
     case 6:
         display->setHeader("Eng Temp", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getCoolantTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getCoolantTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 1000);
         break;
     case 7:
         display->setHeader("MAF Temp", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getIntakeTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getIntakeTemp(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 1000);
         break;
     case 8:
         display->setHeader("Fuel usage", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getConsumption(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getConsumption(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 500);
         break;
     case 9:
         #ifdef REGION_UK
@@ -105,11 +105,11 @@ void DIAG_MODE::updateUI() {
         #else
             display->setHeader("INST CONS", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
         #endif
-        display->setBody(engine->getMPG(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getMPG(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 500);
         break;
     case 10:
         display->setHeader("Oil Level", IC_TEXT_FMT_LEFT_JUSTIFICATION, 2000);
-        display->setBody(engine->getOilLevel(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 250);
+        display->setBody(engine->getOilLevel(), IC_TEXT_FMT_CENTER_JUSTIFICATION, 1000);
     default:
         break;
     }

@@ -48,8 +48,7 @@ void ENGINE_DATA::readFrame(can_frame *f) {
 const char* ENGINE_DATA::getTransmissionTemp() {
     if (this->engineOn == false) {
         return ENGINE_OFF;
-    } else if (this->transm
-    ission_temp == 0xFF) {
+    } else if (this->transmission_temp == 0xFF) {
         return UNKNOWN_VAL;
     } else {
         memset(buffer, 0x00, sizeof(buffer));
@@ -102,14 +101,18 @@ const char* ENGINE_DATA::getGearingManual() {
       // Check each gear to see if the measured RPM matches the calculated RPM
       int detectedGear = -1;
       // Calculate expected driveshaft RPM for this gear
-      float RPM_driveshaft = float(this->speed_km) * 1000.0 / 60.0 / wheelDiameterMeters / 3.14159 * finalDriveRatio;
+      //float RPM_driveshaft = this->speed_km * 1000.0 / 60.0 / wheelDiameterMeters / 3.14159 * finalDriveRatio;
+      //Serial.println("RPM driveshaft: ");
       //Serial.println(RPM_driveshaft);
-      for (int gear = 1; gear <= numGears; gear++) {
+      //Serial.println("  RPM engine: ");
+      //Serial.println(this->rpm);
+      for (int gear = 1; gear <= NUM_GEARS_MANUAL; gear++) {
           // Check if measured RPM is within the margin
-          if (fabs(this->rpm - (RPM_driveshaft*gearRatios[gear])) < rpmMargin) {
+          if (fabs(this->rpm - (this->speed_km * 1000.0 / 60.0 / wheelDiameterMeters / 3.14159 * finalDriveRatio*GEAR_RATIOS_MANUAL[gear-1])) < RPM_MARGIN) {
               detectedGear = gear;
               break;
           }
+
       }
       if(detectedGear>0){
         sprintf(buffer, "%d", detectedGear);
@@ -194,10 +197,11 @@ const char* ENGINE_DATA::getMPG() {
                 float mpg = km_l * 2.35215; // Miles per gallon (US)
             #else
                 float mpg = 100.0/km_l; // LITERS PER 100KM like the rest of the fking world
+                if(mpg > 99) mpg=99.9;
             #endif
             char str[7];
             dtostrf(mpg, 5, 1, str);
-            sprintf(buffer, "%s l/100", str);
+            sprintf(buffer, "%sl/100", str);
         }
     }
     return buffer;
@@ -230,25 +234,19 @@ const char* ENGINE_DATA::getOilLevel() {
         return UNKNOWN_VAL;
     } else {
         memset(buffer, 0x00, sizeof(buffer));
-        sprintf(buffer, "%d", this->oil_level);
+        char str[7];
+        dtostrf((this->oil_level*0.02+0.13), 4, 1, str);
+        sprintf(buffer, "%s", str);
         return buffer;
     }
 }
 
 const char* ENGINE_DATA::getVBatt() {
-    // if (!this->engineOn) {
-    //     return ENGINE_OFF;
-    // }
-    // if (this->engineOn == false) {
-    //     return ENGINE_OFF;
-    // }
-    // if (this->coolant_temp == 0xFF) {
-    //     return UNKNOWN_VAL;
-    // } else {
-        memset(buffer, 0x00, sizeof(buffer));
-        sprintf(buffer, "%d V", this->v_batt);
-        return buffer;
-    //}
+    char str[7];
+    dtostrf((this->v_batt/10), 4, 1, str);
+    memset(buffer, 0x00, sizeof(buffer));
+    sprintf(buffer, "%s", str);
+    return buffer;
 }
 
 

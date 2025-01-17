@@ -21,13 +21,13 @@ const char * const PROGMEM GEAR_REVERSE_2 = "Reverse 2";
 
 #else
   // Vehicle parameters
-  const float PROGMEM finalDriveRatio = 3.27;         // Final drive ratio (replace with your own)(https://www.automobile-catalog.com/)
+  const float PROGMEM finalDriveRatio = 3.07;         // Final drive ratio (replace with your own)(https://www.automobile-catalog.com/)
   const float PROGMEM wheelDiameterMeters = 0.635;    // Wheel diameter (calculate based on tyre)(https://tiresize.com/calculator/)
   // Gear ratios for forward gears (replace with your own ratios)(https://www.automobile-catalog.com/)
-  const float PROGMEM gearRatios[] = {4.459, 2.614, 1.723, 1.245, 1.0, 0.838};
-  const int PROGMEM numGears = 6; // for now set manualy
+  const float PROGMEM GEAR_RATIOS_MANUAL[6] = {4.459, 2.614, 1.723, 1.245, 1.0, 0.838};
+  const int PROGMEM NUM_GEARS_MANUAL = 6; // for now set manualy
   // Tolerance for RPM matching (e.g., ±50 RPM)
-  const float PROGMEM rpmMargin = 50.0;
+  const float PROGMEM RPM_MARGIN = 80.0;
 #endif
 
 const char * const PROGMEM FUEL_CONSUMP_INF = "Inf";

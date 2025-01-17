@@ -14,9 +14,9 @@ const char * const PROGMEM UNKNOWN_VAL = "Unknown";
 
 const char * const PROGMEM GEAR_NEUTRAL = "Neutral";
 const char * const PROGMEM GEAR_REVERSE = "Reverse";
+const char * const PROGMEM GEAR_PARK = "Park";
 
 #ifndef MANUAL_GEARBOX
-const char * const PROGMEM GEAR_PARK = "Park";
 const char * const PROGMEM GEAR_REVERSE_2 = "Reverse 2";
 
 #else
@@ -47,21 +47,26 @@ class ENGINE_DATA{
         const char* getCoolantTemp();
         const char* getConsumption();
         const char* getOilTemp();
+        const char* getOilLevel();
         const char* getMPG();
+        const char* getVBatt();
         boolean engineOn = false;
     private:
         char buffer[20] = {0x00};
         uint8_t transmission_temp = 0xFF;
-        int speed_km = 0;
+        uint8_t speed_km = 0;
+        uint8_t v_batt = 0;
         #ifdef MANUAL_GEARBOX
         int rpm = 0;
         uint8_t ReverseEngaged = 0xFF;
+        uint8_t ParkingBrakeEngaged = 0xFF;
         #endif
         uint8_t targetGear = 0xFF;
         uint8_t actualGear = 0xFF;
         uint8_t coolant_temp = 0xFF;
         uint8_t intake_temp = 0xFF;
         uint8_t oil_temp = 0xFF;
+        uint8_t oil_level = 0xFF;
         unsigned long lastMpgTime = 0;
         long consumption = 0xFFFF;
 };

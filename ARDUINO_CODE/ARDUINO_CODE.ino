@@ -117,14 +117,11 @@ void HandleBluetoothRequest() {
 void handleFrameRead() {
     can_frame *readB = canB->read_frame();
     if (readB->can_dlc != 0) {
-      //Serial.println("procesing frame");
         ic->processIcResponse(readB);
         handleKeyInputs(readB);
-        if ((readB->can_id == 0x0002 || readB->can_dlc == 0x000C) && showDiagMode) {
-            //Serial.println("read diag ecu frame");
+        if ((readB->can_id == 0x0002 || readB->can_id == 0x000C || readB->can_id == 0x0016) && showDiagMode) {
             eng->readFrame(readB);
         } else if (readB->can_id == 0x0000) {
-            //Serial.println("read non diag ecus");
             if ((readB->data[0] & 0b000000001) > 0) {
                 CAR_SLEEP = false;
             } else {
@@ -135,7 +132,6 @@ void handleFrameRead() {
     }
     can_frame *read = canC->read_frame();
     if (read->can_dlc != 0 && showDiagMode) {
-      //Serial.println("processin canc frame");
         eng->readFrame(read);
     }
 }

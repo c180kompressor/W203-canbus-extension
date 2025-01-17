@@ -10,8 +10,9 @@
 // comment out if you own a Arduino uno! or other smaller board
 //#define ARDUINO_MEGA
 
-// Comment out if you want MPG in US form, not UK
-#define REGION_UK
+// Uncomment out if you want MPG(either UK or US) instead of L/100KM
+//#define REGION_UK
+//#define REGION_US
 
 #define SYSTEM_SRAM_SIZE 2048
 

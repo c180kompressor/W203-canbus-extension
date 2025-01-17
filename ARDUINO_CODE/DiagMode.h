@@ -8,7 +8,7 @@
 #include "Audio_Display.h"
 #include "Engine.h"
 
-#define MAX_DIAG_PAGES 8
+#define MAX_DIAG_PAGES 10
 
 
 class DIAG_MODE {

@@ -10,7 +10,7 @@ This is an extension of RAND_ASH 's original project [W203-Canbus](https://githu
 * Reading battery voltage from the corresponding can message and adding it to diag mode
 * Reading oil level from the corresponding can message and figuring out the oil level conversion formula and adding it to diag mode
 * Calculating consumption(MPG) in l/100km and adding it into diag mode and adding it as an option for compilation
-* Renaming the DIAG MODE to AMG MENU, inspired of the AMG MENU's in newer Benzes like 211,204,212..
+* Renaming the DIAG MODE to AMG MENU [demo here](https://youtube.com/shorts/wPJ_9cQJGuE?feature=share), inspired of the AMG MENU's in newer Benzes like 211,204,212..
 
 # Fixes that needed to be done to make it work
 I found a few things needed to be changed/adapted to make it work on my car:
@@ -69,7 +69,7 @@ I found a few things needed to be changed/adapted to make it work on my car:
 >seems to work alright for my car m271 engine with 5.5 liters oil in total. For different car it wouldnt work because the 8bit value for example for 6.5 liters is already more than 255, tryout for your car to find it.
 
 # LIST OF FUTURE PLANS/IMPLEMENTATIONS
-* for gearbox display - have to figure out some way to make it work better during accelerations. Now it seems that either the rpm or the speed is coming in faster than the other and during harder acceleration the arduino thinks it is in neutral. At constant speed or deceleration or acceleration above 50-60km/h there is not problem. It seems to be that either the RPM or the speed is coming in with some dalay or maybe the calculation that I am doing is too slow.
+* for gearbox display - have to figure out some way to make it work better during accelerations. Now it seems that either the rpm or the speed is coming in faster than the other and during harder acceleration the arduino thinks it is in neutral. At constant speed or deceleration or acceleration above 50-60km/h there is not problem. It seems to be that either the RPM or the speed is coming in with some dalay or maybe the calculation that I am doing is too slow. Current implementation demo [here](https://youtube.com/shorts/oqdt2RCeWmY?feature=share).
 * Make use of the 4 lines available on the telephone page and make something that looks a lot more like an AMG MENU on it.
 * Once the hardware arrives I will try the bluetooth module as well.
 * Look for some way to obtain the boost pressure of the charge air, which would be a very cool addition to the DIAG MODE/AMG MENU.

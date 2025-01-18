@@ -16,7 +16,7 @@ void DIAG_MODE::updateUI() {
     switch (this->displayPage)
     {
     case 1:
-        display->setHeader("DIAG MODE", IC_TEXT_FMT_CENTER_JUSTIFICATION , 2000);
+        display->setHeader("AMG MENU", IC_TEXT_FMT_CENTER_JUSTIFICATION | IC_TEXT_FMT_HIGHLIGHTED , 2000);
         display->setBody("SCROLL", IC_TEXT_FMT_CENTER_JUSTIFICATION | IC_TEXT_FMT_HIGHLIGHTED , 1000);
         break;
     case 2:

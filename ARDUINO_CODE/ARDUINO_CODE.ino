@@ -69,7 +69,7 @@ void doLightShow() {
 }
 
 void setup() {
-    Serial.println("start setup");
+    //+Serial.println("start setup");
     pinMode(8, OUTPUT);
     pinMode(10, OUTPUT);
     Serial.begin(115200);

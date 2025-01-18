@@ -100,12 +100,6 @@ const char* ENGINE_DATA::getGearingManual() {
       memset(buffer, 0x00, sizeof(buffer));
       // Check each gear to see if the measured RPM matches the calculated RPM
       int detectedGear = -1;
-      // Calculate expected driveshaft RPM for this gear
-      //float RPM_driveshaft = this->speed_km * 1000.0 / 60.0 / wheelDiameterMeters / 3.14159 * finalDriveRatio;
-      //Serial.println("RPM driveshaft: ");
-      //Serial.println(RPM_driveshaft);
-      //Serial.println("  RPM engine: ");
-      //Serial.println(this->rpm);
       for (int gear = 1; gear <= NUM_GEARS_MANUAL; gear++) {
           // Check if measured RPM is within the margin
           if (fabs(this->rpm - (this->speed_km * 1000.0 / 60.0 / wheelDiameterMeters / 3.14159 * finalDriveRatio*GEAR_RATIOS_MANUAL[gear-1])) < RPM_MARGIN) {
@@ -172,6 +166,7 @@ const char* ENGINE_DATA::getMPG() {
     }
     if (millis() - lastMpgTime >= 1000) {
         lastMpgTime = millis();
+        //if(this->)
         if (this->speed_km == 0) {
             #ifdef REGION_UK
                 sprintf(buffer, "0.0 MPG"); 
@@ -186,7 +181,7 @@ const char* ENGINE_DATA::getMPG() {
             #elif defined(REGION_US)
                 sprintf(buffer, "Inf MPG");
             #else
-                sprintf(buffer, "0.0 l/100");
+                sprintf(buffer, "0.0l/100");
             #endif
         } else {
             float l_per_hour = 3600.0 * (this->consumption / 1000000.0);
@@ -200,7 +195,7 @@ const char* ENGINE_DATA::getMPG() {
                 if(mpg > 99) mpg=99.9;
             #endif
             char str[7];
-            dtostrf(mpg, 5, 1, str);
+            dtostrf(mpg, 4, 1, str);
             sprintf(buffer, "%sl/100", str);
         }
     }
@@ -235,15 +230,15 @@ const char* ENGINE_DATA::getOilLevel() {
     } else {
         memset(buffer, 0x00, sizeof(buffer));
         char str[7];
-        dtostrf((this->oil_level*0.02+0.13), 4, 1, str);
-        sprintf(buffer, "%s", str);
+        dtostrf((float(this->oil_level)*0.02+0.13), 4, 1, str);
+        sprintf(buffer, "%s L", str);
         return buffer;
     }
 }
 
 const char* ENGINE_DATA::getVBatt() {
     char str[7];
-    dtostrf((this->v_batt/10), 4, 1, str);
+    dtostrf((float(this->v_batt) / 10), 4, 1, str);
     memset(buffer, 0x00, sizeof(buffer));
     sprintf(buffer, "%s", str);
     return buffer;

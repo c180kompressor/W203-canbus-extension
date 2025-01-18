@@ -27,7 +27,7 @@ const char * const PROGMEM GEAR_REVERSE_2 = "Reverse 2";
   const float PROGMEM GEAR_RATIOS_MANUAL[6] = {4.459, 2.614, 1.723, 1.245, 1.0, 0.838};
   const int PROGMEM NUM_GEARS_MANUAL = 6; // for now set manualy
   // Tolerance for RPM matching (e.g., ±50 RPM)
-  const float PROGMEM RPM_MARGIN = 80.0;
+  const float PROGMEM RPM_MARGIN = 100.0;
 #endif
 
 const char * const PROGMEM FUEL_CONSUMP_INF = "Inf";

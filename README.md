@@ -19,8 +19,8 @@ I found a few things needed to be changed/adapted to make it work on my car:
 * THE FIX FOR THE ARDUINO CRASHING WHEN RECEIVING CAN C FRAMES:
 >A condition needs to be added when calling
 ```cpp
-        eng->readFrame(readB)
-		eng->readFrame(read)
+        eng->readFrame(readC)
+		eng->readFrame(readC)
 ```
 >in function 
 ```cpp
@@ -28,8 +28,8 @@ I found a few things needed to be changed/adapted to make it work on my car:
 ```
 >the condition is that
 ```cpp
-		eng->readFrame(readB)
-		eng->readFrame(read)
+		eng->readFrame(readC)
+		eng->readFrame(readC)
 ```
 >is only called when 
 ```cpp
@@ -72,9 +72,13 @@ I found a few things needed to be changed/adapted to make it work on my car:
 * for gearbox display - have to figure out some way to make it work better during accelerations. Now it seems that either the rpm or the speed is coming in faster than the other and during harder acceleration the arduino thinks it is in neutral. At constant speed or deceleration or acceleration above 50-60km/h there is not problem. It seems to be that either the RPM or the speed is coming in with some dalay or maybe the calculation that I am doing is too slow. Current implementation demo [here](https://youtube.com/shorts/oqdt2RCeWmY?feature=share).
 * Make use of the 4 lines available on the telephone page and make something that looks a lot more like an AMG MENU on it.
 * Once the hardware arrives I will try the bluetooth module as well.
-* Look for some way to obtain the boost pressure of the charge air, which would be a very cool addition to the DIAG MODE/AMG MENU.
+* Look for some way to obtain the boost pressure of the charge air, which would be a very cool addition to the DIAG MODE/AMG MENU. The boost pressure should be related to the MAP sensor reading and this is available on the diagnostic can that the ELM327 devices can read so it should be obtainable somehow
+* Look for a way to obtain the oil pressure and include it in the IC display along with the other engine information.
 * Create a PCB for the hardware setup + some kind of enclosure.
-
+* Connect the Arduino to the LPG indicator/switch and make some kind of display on the IC which is showing: the estimated LPG left in the tank, the estimated range with the LPG left, an indication if the car is driving on LPG or petrol, potentialy make some kind of correction for the higher consumption on LPG compared to gasoline
+* If the previous point is working maaybe also try to turn the LPG ON or OFF from the IC instead of the button on the switch/indicator - inspired by the factroy CNG instalations on the W211 and W212 and their display implementations
+* Connect external tyre pressure monitoring sensors and some wireless receiver to the arduino and create a screen which imitates the factory TPMS or potentially even mimic the factory TPMS signals and make them display on the factory screen page for TPMS, saving the hassle of finding the right OEM receiver and connecting it to the ESP modules and more potential problems.
+* Include a screen in the diag menu which can show if the inverter of my car is turned on or not and potentialy include a way to turn it on or off.
 
 # ORIGINAL README PAGE FROM [W203-CANBUS](https://github.com/rnd-ash/W203-canbus)
 
@@ -112,7 +116,7 @@ So far, the project has grown well out of proportion and has ended up being a wa
 See [here](https://docs.google.com/spreadsheets/d/1krPDmjjwmlta4jAVcDMoWbseAokUYnBAHn67pOo00C0/edit?usp=sharing)
 
 ### Hardware setup
-![Arduino setup](/setup.png?raw=true "Arduino hardware setup")
+![Arduino setup](setup.png?raw=true "Arduino hardware setup")
 
 Currently, I have 2 MCP2515 modules. 1 with a 8Mhz Clock thats connected to CAN C, and 1 with a 16Mhz clock that is connected to Can B. (I found out that Can B is NOT compatible with the 8Mhz clock due to its odd bitrate of 83.3Kbps). If you end up using 2 modules with 16Mhz clocks, please change the following line in IC_CUSTOM_TEXT/canbuscomm.cpp:
 ```cpp

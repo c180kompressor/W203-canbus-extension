@@ -15,7 +15,7 @@ char* BLUETOOTH::read_message() {
         uint8_t len = Serial1.read();
         Serial1.readBytes(buffer, len);
         this->isConnected = true;
-        DPRINTLN(BT_REC_STR+String(buffer));
+        //DPRINTLN(BT_REC_STR+String(buffer));
     }
     return buffer;
 }
@@ -38,7 +38,7 @@ char* BLUETOOTH::read_message() {
         this->isConnected = true;
         uint8_t len = bt->read();
         bt->readBytes(buffer, len);
-        DPRINTLN(BT_REC_STR+String(buffer));
+        //DPRINTLN(BT_REC_STR+String(buffer));
     }
     return buffer;
 }

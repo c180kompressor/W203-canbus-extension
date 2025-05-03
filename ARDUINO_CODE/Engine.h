@@ -8,12 +8,12 @@
 
 
 
-const char * const PROGMEM ENGINE_OFF = "Engine off";
-const char * const PROGMEM UNKNOWN_VAL = "Unknown";
+const char * const PROGMEM ENGINE_OFF = "off";
+const char * const PROGMEM UNKNOWN_VAL = "Unkn";
 
 
-const char * const PROGMEM GEAR_NEUTRAL = "Neutral";
-const char * const PROGMEM GEAR_REVERSE = "Reverse";
+const char * const PROGMEM GEAR_NEUTRAL = "N";
+const char * const PROGMEM GEAR_REVERSE = "R";
 const char * const PROGMEM GEAR_PARK = "Park";
 
 #ifndef MANUAL_GEARBOX

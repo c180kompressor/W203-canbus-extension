@@ -45,6 +45,7 @@ char idBuffer[7];
 char hexBuffer[4];
 
 String *CANBUS_COMMUNICATOR::frame_to_string(can_frame *f, bool includeBinary) {
+    //Serial.println("kur");
     frame_string = this->busID;
     frame_string += F("FRAME ID: ");
     sprintf(idBuffer, "0x%04X", f->can_id);
@@ -77,7 +78,9 @@ String *CANBUS_COMMUNICATOR::frame_to_string(can_frame *f, bool includeBinary) {
             frame_string +=(char) f->data[i];
         }
     }
+    //Serial.println(frame_string);
     return &frame_string;
+
 }
 
 void CANBUS_COMMUNICATOR::wakeup() {

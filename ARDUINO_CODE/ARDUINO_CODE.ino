@@ -9,11 +9,12 @@
 #include "Audio_Display.h"
 #include "Lights.h"
 #include "wheel_controls.h"
-#include "Telephone_Display.h"
+//#include "Telephone_Display.h"
 #include "Engine.h"
 #include "Music.h"
 #include "defines.h"
 #include "DiagMode.h"
+#include "AMG_Menu_tel_page.h"
 
 BLUETOOTH *bt;
 IC_DISPLAY *ic;
@@ -26,6 +27,7 @@ WHEEL_CONTROLS *wheel_controls;
 ENGINE_DATA * eng;
 DIAG_MODE* diag;
 MUSIC* musicdata;
+AMG_MENU* amg;
 
 const char NEXT_TRACK_CMD[1] = {0x00};
 const char PREV_TRACK_CMD[1] = {0x01};
@@ -86,8 +88,10 @@ void setup() {
     ic = new IC_DISPLAY(canB);
     audio = new AUDIO_DISPLAY(ic);
     musicdata = new MUSIC(audio);
-    //tel = new TELEPHONE_DISPLAY(ic, bt);
+    //tel = new TELEPHONE_DISPLAY(ic/*, bt*/);
     wheel_controls = new WHEEL_CONTROLS();
+    eng = new ENGINE_DATA();
+    amg = new AMG_MENU(ic,eng);
 
     #ifdef ARDUINO_MEGA
     eng = new ENGINE_DATA();
@@ -119,7 +123,7 @@ void handleFrameRead() {
     if (readB->can_dlc != 0) {
         ic->processIcResponse(readB);
         handleKeyInputs(readB);
-        if ((readB->can_id == 0x0002 || readB->can_id == 0x000C || readB->can_id == 0x0016) && showDiagMode) {
+        if ((readB->can_id == 0x0002 || readB->can_id == 0x000C || readB->can_id == 0x0016) /*&& showDiagMode*/) {
             eng->readFrame(readB);
         } else if (readB->can_id == 0x0000) {
             if ((readB->data[0] & 0b000000001) > 0) {
@@ -131,7 +135,7 @@ void handleFrameRead() {
 
     }
     can_frame *read = canC->read_frame();
-    if (read->can_dlc != 0 && showDiagMode) {
+    if (read->can_dlc != 0 /*&& showDiagMode*/) {
         eng->readFrame(read);
     }
 }
@@ -177,10 +181,10 @@ void handleKeyInputs(can_frame *f) {
                 case BUTTON_TEL_ANS:
                     Serial.println("tel key pressed diag mode started");
                     #ifndef ARDUINO_MEGA
-                    eng = new ENGINE_DATA();
-                    diag = new DIAG_MODE(audio, eng);
+                    //eng = new ENGINE_DATA();
+                    //diag = new DIAG_MODE(audio, eng);
                     #endif
-                    showDiagMode = true; 
+                    //showDiagMode = true; 
                     break;
                 default:
                     break;
@@ -189,7 +193,7 @@ void handleKeyInputs(can_frame *f) {
     } 
     // Telephone screen
     else if (ic->current_page == 0x05) {
-      Serial.println("we are in tel page");
+      //Serial.println("we are in tel page");
         #ifdef AMG_MENU
           // write here phone update function for amg menu
         #endif
@@ -227,12 +231,14 @@ void loop() {
     // Dont need to do any of this if we are asleep
     if (!CAR_SLEEP) {
         //HandleBluetoothRequest();
-        audio->update();
-        musicdata->update();
+        //audio->update();
+        //musicdata->update();
+        //tel->update();
+        amg->update();
         if (showDiagMode) {
-            diag->updateUI();
+            //diag->updateUI();
         } else {
-            musicdata->updateUI();
+            //musicdata->updateUI();
         }
     }
     handleFrameRead();

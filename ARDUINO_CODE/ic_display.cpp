@@ -5,7 +5,7 @@ IC_DISPLAY::IC_DISPLAY(CANBUS_COMMUNICATOR *can) {
     canB = can;
 }
 
-uint8_t IC_DISPLAY::current_page = IC_PAGE_AUDIO;
+uint8_t IC_DISPLAY::current_page = IC_PAGE_TELEPHONE;
 
 bool IC_DISPLAY::can_fit_body_text(const char *text) {
     int length = 0;
@@ -24,7 +24,7 @@ uint8_t IC_DISPLAY::getChecksum(uint8_t len, uint8_t* payload) {
 void IC_DISPLAY::setHeader(uint8_t p, const char* text, uint8_t fmt) {
     if (strlen(text) == 0) return;
 
-    DPRINTLN(F("-- Update header --"));
+    //DPRINTLN(F("-- Update header --"));
     uint8_t str_len = min(strlen(text), 20);
     buffer_size = str_len + 3;
     buffer[0] = p; // Page number
@@ -42,7 +42,7 @@ void IC_DISPLAY::setHeader(uint8_t p, const char* text, uint8_t fmt) {
 void IC_DISPLAY::setBody(uint8_t p, const char* text, uint8_t fmt = IC_TEXT_FMT_CENTER_JUSTIFICATION) {
     if (strlen(text) == 0) return;
 
-    DPRINTLN(F("-- Update body --"));
+    //DPRINTLN(F("-- Update body --"));
     uint8_t str_len = min(strlen(text), 32);
     buffer_size = str_len + 7; // Not including CS bit
     buffer[0] = p; // Page number
@@ -75,7 +75,7 @@ void IC_DISPLAY::setBodyTel(uint8_t numStrs, const char* lines[]){
         return;
     }
 
-    DPRINTLN(F("-- Update body --"));
+    //DPRINTLN(F("-- Update body --"));
     buffer_size = charCount + 5; // Not including CS bit
     buffer[0] = IC_PAGE_TELEPHONE; // Page number
     buffer[1] = 0x26; // Package 26 (Body text update)
@@ -85,7 +85,7 @@ void IC_DISPLAY::setBodyTel(uint8_t numStrs, const char* lines[]){
     uint8_t index = 5;
     for (uint8_t i = 0; i < strsToUse; i++) {
         buffer[index] = strlen(lines[i]) + 2;
-        buffer[index+1] = IC_TEXT_FMT_CENTER_JUSTIFICATION | IC_TEXT_FMT_HIGHLIGHTED;
+        buffer[index+1] = IC_TEXT_FMT_LEFT_JUSTIFICATION /*| IC_TEXT_FMT_HIGHLIGHTED*/;
         index += 2;
         for (uint8_t x = 0; x < strlen(lines[i]); x++) {
             buffer[index] = lines[i][x];
@@ -100,7 +100,9 @@ void IC_DISPLAY::setBodyTel(uint8_t numStrs, const char* lines[]){
 
 void IC_DISPLAY::processIcResponse(can_frame *r) {
      if (r->can_id == 0x1D0) {
-        DPRINTLN(IC_TO_AGW_STR+*canB->frame_to_string(r, false));
+        //DPRINTLN(IC_TO_AGW_STR+*canB->frame_to_string(r, false));
+        //Serial.print(IC_TO_AGW_STR);
+        //Serial.println(*canB->frame_to_string(r, false));
         // Some data relating to navigation sent to AGW
         if (r->data[0] == 0x06 && r->data[2] == 0x27) {
             // Audio Page
@@ -109,6 +111,7 @@ void IC_DISPLAY::processIcResponse(can_frame *r) {
                 current_page = IC_PAGE_AUDIO;
             }
             else if (r->data[1] == 0x03 && r->data[6] == 0xC3) { // Move out
+                Serial.println("we are on other page");
                 current_page = IC_PAGE_OTHER;
             }
 
@@ -118,7 +121,7 @@ void IC_DISPLAY::processIcResponse(can_frame *r) {
                 current_page = IC_PAGE_TELEPHONE;
             }
             else if (r->data[1] == 0x05 && r->data[6] == 0xC1) { // Move out
-                Serial.println("we are on other page");
+                Serial.println("we are on other than telephone page");
                 current_page = IC_PAGE_OTHER;
             }
         }
@@ -127,7 +130,7 @@ void IC_DISPLAY::processIcResponse(can_frame *r) {
 
 
 void IC_DISPLAY::initPage(uint8_t p, const char* header, uint8_t fmt, uint8_t upper_Symbol, uint8_t lower_Symbol, uint8_t numLines=1) {
-    DPRINTLN(F("-- Init page --"));
+    //DPRINTLN(F("-- Init page --"));
     uint8_t str_len = min(strlen(header), 20);
     buffer_size = str_len + 17; // Not including CS bit
     buffer[0] = p; // Page number
@@ -170,7 +173,7 @@ void IC_DISPLAY::sendBytes(int pre_delay, int post_delay) {
     if (buffer_size < 8) {
         x.data[0] = buffer_size;
         for (uint8_t i = 0; i < buffer_size; i++) x.data[i+1] = buffer[i];
-        DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
+        //DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
         canB->sendToBus(&x);
         wait(post_delay);
         return;
@@ -178,53 +181,53 @@ void IC_DISPLAY::sendBytes(int pre_delay, int post_delay) {
         x.data[0] = 0x10;
         x.data[1] = buffer_size;
         for (uint8_t i = 2; i < 8; i++) x.data[i] = buffer[i-2];
-        DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
+        //DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
         canB->sendToBus(&x);
         wait(5);
         x.data[0] = 0x21;
         for (uint8_t i = 1; i < 8; i++) x.data[i] = buffer[i+5];
-        DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
+        //DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
         canB->sendToBus(&x);
         wait(2);
         if (buffer_size > 13) {
             x.data[0] = 0x22;
             for (uint8_t i = 1; i < 8; i++) x.data[i] = buffer[i+12];
-            DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
+            //DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
             canB->sendToBus(&x);
             wait(2);
         }
         if (buffer_size > 20) {
             x.data[0] = 0x23;
             for (uint8_t i = 1; i < 8; i++) x.data[i] = buffer[i+19];
-            DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
+            //DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
             canB->sendToBus(&x);
             wait(2);
         }
         if (buffer_size > 27) {
             x.data[0] = 0x24;
             for (uint8_t i = 1; i < 8; i++) x.data[i] = buffer[i+26];
-            DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
+            //DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
             canB->sendToBus(&x);
             wait(2);
         }
         if (buffer_size > 34) {
             x.data[0] = 0x25;
             for (uint8_t i = 1; i < 8; i++) x.data[i] = buffer[i+33];
-            DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
+            //DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
             canB->sendToBus(&x);
             wait(2);
         }
         if (buffer_size > 41) {
             x.data[0] = 0x26;
             for (uint8_t i = 1; i < 8; i++) x.data[i] = buffer[i+40];
-            DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
+            //DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
             canB->sendToBus(&x);
             wait(2);
         }
         if (buffer_size > 48) {
             x.data[0] = 0x27;
             for (uint8_t i = 1; i < 8; i++) x.data[i] = buffer[i+47];
-            DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
+            //DPRINTLN(AGW_TO_IC_STR+*canB->frame_to_string(&x, false));
             canB->sendToBus(&x);
             wait(2);
         }

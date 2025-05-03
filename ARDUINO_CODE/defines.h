@@ -28,4 +28,4 @@
 #define MANUAL_GEARBOX
 
 // AMG MENU (Diag mode in Telephone page on 4 lines) (have not tried it yet)
-//#define AMG_MENU
+#define AMG_MENU_D

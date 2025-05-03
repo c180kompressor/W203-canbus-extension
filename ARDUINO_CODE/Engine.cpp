@@ -129,7 +129,7 @@ const char* ENGINE_DATA::getIntakeTemp() {
         return UNKNOWN_VAL;
     } else {
         memset(buffer, 0x00, sizeof(buffer));
-        sprintf(buffer, "%d C", this->intake_temp - 40);
+        sprintf(buffer, "%dC", this->intake_temp - 40);
         return buffer; 
     }
 }
@@ -142,7 +142,7 @@ const char* ENGINE_DATA::getCoolantTemp() {
         return UNKNOWN_VAL;
     } else {
         memset(buffer, 0x00, sizeof(buffer));
-        sprintf(buffer, "%d C", this->coolant_temp - 40);
+        sprintf(buffer, "%dC", this->coolant_temp - 40);
         return buffer;
     }
 }
@@ -213,7 +213,7 @@ const char* ENGINE_DATA::getOilTemp() {
         return UNKNOWN_VAL;
     } else {
         memset(buffer, 0x00, sizeof(buffer));
-        sprintf(buffer, "%d C", this->oil_temp - 40);
+        sprintf(buffer, "%dC", this->oil_temp - 40);
         return buffer;
     }
 }
@@ -230,8 +230,8 @@ const char* ENGINE_DATA::getOilLevel() {
     } else {
         memset(buffer, 0x00, sizeof(buffer));
         char str[7];
-        dtostrf((float(this->oil_level)*0.02+0.13), 4, 1, str);
-        sprintf(buffer, "%s L", str);
+        dtostrf((float(this->oil_level)*0.02+1.3), 4, 1, str);
+        sprintf(buffer, "%sL", str);
         return buffer;
     }
 }

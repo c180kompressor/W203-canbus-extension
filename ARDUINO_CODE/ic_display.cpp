@@ -85,7 +85,7 @@ void IC_DISPLAY::setBodyTel(uint8_t numStrs, const char* lines[]){
     uint8_t index = 5;
     for (uint8_t i = 0; i < strsToUse; i++) {
         buffer[index] = strlen(lines[i]) + 2;
-        buffer[index+1] = IC_TEXT_FMT_LEFT_JUSTIFICATION /*| IC_TEXT_FMT_HIGHLIGHTED*/;
+        buffer[index+1] = IC_TEXT_FMT_CENTER_JUSTIFICATION /*| IC_TEXT_FMT_HIGHLIGHTED*/;
         index += 2;
         for (uint8_t x = 0; x < strlen(lines[i]); x++) {
             buffer[index] = lines[i][x];
@@ -101,10 +101,11 @@ void IC_DISPLAY::setBodyTel(uint8_t numStrs, const char* lines[]){
 void IC_DISPLAY::processIcResponse(can_frame *r) {
      if (r->can_id == 0x1D0) {
         //DPRINTLN(IC_TO_AGW_STR+*canB->frame_to_string(r, false));
-        //Serial.print(IC_TO_AGW_STR);
-        //Serial.println(*canB->frame_to_string(r, false));
+        
         // Some data relating to navigation sent to AGW
         if (r->data[0] == 0x06 && r->data[2] == 0x27) {
+            Serial.print(IC_TO_AGW_STR);
+            Serial.println(*canB->frame_to_string(r, false));
             // Audio Page
             if (r->data[1] == 0x03 && r->data[6] == 0xC4) { // Move in
                 Serial.println("we are on audio page");

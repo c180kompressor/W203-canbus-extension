@@ -71,7 +71,6 @@ void doLightShow() {
 }
 
 void setup() {
-    //+Serial.println("start setup");
     pinMode(8, OUTPUT);
     pinMode(10, OUTPUT);
     Serial.begin(115200);
@@ -123,7 +122,7 @@ void handleFrameRead() {
     if (readB->can_dlc != 0) {
         ic->processIcResponse(readB);
         handleKeyInputs(readB);
-        if ((readB->can_id == 0x0002 || readB->can_id == 0x000C || readB->can_id == 0x0016) /*&& showDiagMode*/) {
+        if ((readB->can_id == 0x000C || readB->can_id == 0x0016) /*&& showDiagMode*/) {
             eng->readFrame(readB);
         } else if (readB->can_id == 0x0000) {
             if ((readB->data[0] & 0b000000001) > 0) {
@@ -143,68 +142,36 @@ void handleFrameRead() {
 void handleKeyInputs(can_frame *f) {
     // User is in audio page
     if (ic->current_page == 0x03) {
-        // Diag mode is currently being shown
-        if (showDiagMode) {
-            switch(wheel_controls->getPressed(f)) {
-                case BUTTON_ARROW_UP:
-                    Serial.println("up key pressed");
-                    diag->nextDiagPage();
-                    break;
-                case BUTTON_ARROW_DOWN:
-                    Serial.println("down pressed");
-                    diag->prevDiagPage();
-                    break;
-                case BUTTON_TEL_DEC:
-                    Serial.println("tel dec key pressed diag mode ended");
-                    showDiagMode = false;
-                    // Mega has enough RAM to keep these in memory, uno doesn't
-                    #ifndef ARDUINO_MEGA
-                    free(eng);
-                    free(diag);
-                    #endif
-                    break;
-                default:
-                    break;
-            }
+        switch(wheel_controls->getPressed(f)) {
+            case BUTTON_ARROW_UP:
+                Serial.println("up key pressed");
+                break;
+            case BUTTON_ARROW_DOWN:
+                Serial.println("down pressed");
+                break;
+            case BUTTON_TEL_DEC:
+                Serial.println("tel dec key pressed amg menu prev page");
+                amg->prevAMGPage();
+                break;
+            case BUTTON_TEL_ANS:
+                Serial.println("tel key pressed amg menu next page");
+                amg->nextAMGPage();
+                break;
+            default:
+                break;
         } 
-        // Normal music screen is being shown
-        else {
-            switch(wheel_controls->getPressed(f)) {
-                case BUTTON_ARROW_UP:
-                    Serial.println("up key pressed");
-                    //bt->write_message(NEXT_TRACK_CMD, 1);
-                    break;
-                case BUTTON_ARROW_DOWN:
-                    Serial.println("down pressed");
-                    //bt->write_message(PREV_TRACK_CMD, 1);
-                    break;
-                case BUTTON_TEL_ANS:
-                    Serial.println("tel key pressed diag mode started");
-                    #ifndef ARDUINO_MEGA
-                    //eng = new ENGINE_DATA();
-                    //diag = new DIAG_MODE(audio, eng);
-                    #endif
-                    //showDiagMode = true; 
-                    break;
-                default:
-                    break;
-            }
-        }
     } 
     // Telephone screen
     else if (ic->current_page == 0x05) {
       //Serial.println("we are in tel page");
-        #ifdef AMG_MENU
-          // write here phone update function for amg menu
-        #endif
         switch(wheel_controls->getPressed(f)) {
             case BUTTON_TEL_ANS:
                 Serial.println("tel page tel button");
-                //bt->write_message(NEXT_TRACK_CMD, 1); // Use telephone Answer button to seek track
+                amg->nextAMGPage();
                 break;
             case BUTTON_TEL_DEC:
                 Serial.println("tel page tel dec button");
-                //bt->write_message(PREV_TRACK_CMD, 1); // Use telephone decline button to repeat track
+                amg->prevAMGPage();
                 break;
             default:
                 break;
@@ -231,15 +198,10 @@ void loop() {
     // Dont need to do any of this if we are asleep
     if (!CAR_SLEEP) {
         //HandleBluetoothRequest();
+        //musicdata->updateUI();
         //audio->update();
-        //musicdata->update();
         //tel->update();
-        amg->update();
-        if (showDiagMode) {
-            //diag->updateUI();
-        } else {
-            //musicdata->updateUI();
-        }
+        amg->updateAMG();
     }
     handleFrameRead();
     if (CAR_SLEEP) {

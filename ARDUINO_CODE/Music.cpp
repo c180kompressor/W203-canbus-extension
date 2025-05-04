@@ -97,7 +97,7 @@ void MUSIC::update() {
 
 void MUSIC::updateUI() {
             displayPage->setHeader("AUX/BT", IC_TEXT_FMT_CENTER_JUSTIFICATION, 1000);
-            displayPage->setBody("No Conn.", IC_TEXT_FMT_HIGHLIGHTED | IC_TEXT_FMT_CENTER_JUSTIFICATION, 1000);
+            displayPage->setBody("No-Conn.", IC_TEXT_FMT_HIGHLIGHTED | IC_TEXT_FMT_CENTER_JUSTIFICATION, 1000);
             displayPage->setSymbols(IC_SYMB_UP_ARROW , IC_SYMB_DOWN_ARROW);
             return;
 }

@@ -22,21 +22,18 @@ void ENGINE_DATA::readFrame(can_frame *f) {
             this->targetGear = ((f->data[4]) & 0b11110000) >> 4;
         }
     #else
-        else if (f->can_id == 0x0002) {
-            rpm = (int) ((f->data[2] << 8) | (f->data[3]));
-        }
         else if (f->can_id == 0x0240) {
             ReverseEngaged = uint8_t(((f->data[1]) & 0b00001000) >> 3);
             ParkingBrakeEngaged = uint8_t(((f->data[4]) & 0b00010000) >> 4);
         }
     #endif
     else if (f->can_id == 0x0308) {
+        this->rpm=(int) ((f->data[1] << 8) | (f->data[2]));
         this->oil_temp = uint8_t(f->data[5]);
         this->oil_level = uint8_t(f->data[6]);
     }
     else if (f->can_id == 0x000C) {
         speed_km = f->data[1];
-        //Serial.println(speed_km);
     }
     else if(f->can_id == 0x0016){
         v_batt = uint8_t(f->data[0]);

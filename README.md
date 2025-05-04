@@ -11,6 +11,10 @@ This is an extension of RAND_ASH 's original project [W203-Canbus](https://githu
 * Reading oil level from the corresponding can message and figuring out the oil level conversion formula and adding it to diag mode
 * Calculating consumption(MPG) in l/100km and adding it into diag mode and adding it as an option for compilation
 * Renaming the DIAG MODE to AMG MENU [demo here](https://youtube.com/shorts/wPJ_9cQJGuE?feature=share), inspired of the AMG MENU's in newer Benzes like 211,204,212..
+* Utilising the 4 lines of the Telephone page to create a 2-page AMG-menu there instead of using the Audio page where moving with the up and down arrows is needed as seen in the video in the previous bullet point [demo here](https://youtube.com/shorts/EDKpwcX9LJM?si=Tk5T5PGbTE1oiOo7):
+![](DSC_3554.JPG)
+![](DSC_3555.JPG)
+* Created a pcb to plug in both can-shields, the arduino, the bluetooth module and a DC-DC converter to hopefuly make the setup more neat and tidy. Waiting for the print of the PCB to try it out.
 
 # Fixes that needed to be done to make it work
 I found a few things needed to be changed/adapted to make it work on my car:
@@ -20,7 +24,7 @@ I found a few things needed to be changed/adapted to make it work on my car:
 >A condition needs to be added when calling
 ```cpp
         eng->readFrame(readC)
-		eng->readFrame(readC)
+		eng->readFrame(readB)
 ```
 >in function 
 ```cpp
@@ -29,7 +33,7 @@ I found a few things needed to be changed/adapted to make it work on my car:
 >the condition is that
 ```cpp
 		eng->readFrame(readC)
-		eng->readFrame(readC)
+		eng->readFrame(readB)
 ```
 >is only called when 
 ```cpp
@@ -70,11 +74,11 @@ I found a few things needed to be changed/adapted to make it work on my car:
 
 # LIST OF FUTURE PLANS/IMPLEMENTATIONS
 * for gearbox display - have to figure out some way to make it work better during accelerations. Now it seems that either the rpm or the speed is coming in faster than the other and during harder acceleration the arduino thinks it is in neutral. At constant speed or deceleration or acceleration above 50-60km/h there is not problem. It seems to be that either the RPM or the speed is coming in with some dalay or maybe the calculation that I am doing is too slow. Current implementation demo [here](https://youtube.com/shorts/oqdt2RCeWmY?feature=share).
-* Make use of the 4 lines available on the telephone page and make something that looks a lot more like an AMG MENU on it.
-* Once the hardware arrives I will try the bluetooth module as well.
+
+* Once the pcb arrives I will try the bluetooth module as well.
 * Look for some way to obtain the boost pressure of the charge air, which would be a very cool addition to the DIAG MODE/AMG MENU. The boost pressure should be related to the MAP sensor reading and this is available on the diagnostic can that the ELM327 devices can read so it should be obtainable somehow
 * Look for a way to obtain the oil pressure and include it in the IC display along with the other engine information.
-* Create a PCB for the hardware setup + some kind of enclosure.
+* Create some kind of 3d printable box to put all of the hardware inside
 * Connect the Arduino to the LPG indicator/switch and make some kind of display on the IC which is showing: the estimated LPG left in the tank, the estimated range with the LPG left, an indication if the car is driving on LPG or petrol, potentialy make some kind of correction for the higher consumption on LPG compared to gasoline
 * If the previous point is working maaybe also try to turn the LPG ON or OFF from the IC instead of the button on the switch/indicator - inspired by the factroy CNG instalations on the W211 and W212 and their display implementations
 * Connect external tyre pressure monitoring sensors and some wireless receiver to the arduino and create a screen which imitates the factory TPMS or potentially even mimic the factory TPMS signals and make them display on the factory screen page for TPMS, saving the hassle of finding the right OEM receiver and connecting it to the ESP modules and more potential problems.

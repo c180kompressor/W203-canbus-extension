@@ -33,7 +33,8 @@ void ENGINE_DATA::readFrame(can_frame *f) {
         this->oil_level = uint8_t(f->data[6]);
     }
     else if (f->can_id == 0x000C) {
-        speed_km = f->data[1];
+        this->speed_km = f->data[1];
+        this->rpm_sampled=this->rpm;
     }
     else if(f->can_id == 0x0016){
         v_batt = uint8_t(f->data[0]);
@@ -99,7 +100,7 @@ const char* ENGINE_DATA::getGearingManual() {
       int detectedGear = -1;
       for (int gear = 1; gear <= NUM_GEARS_MANUAL; gear++) {
           // Check if measured RPM is within the margin
-          if (fabs(this->rpm - (this->speed_km * 1000.0 / 60.0 / wheelDiameterMeters / 3.14159 * finalDriveRatio*GEAR_RATIOS_MANUAL[gear-1])) < RPM_MARGIN) {
+          if (fabs(this->rpm_sampled - (this->speed_km * 1000.0 / 60.0 / wheelDiameterMeters / 3.14159 * finalDriveRatio*GEAR_RATIOS_MANUAL[gear-1])) < RPM_MARGIN) {
               detectedGear = gear;
               break;
           }

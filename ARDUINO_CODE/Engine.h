@@ -58,6 +58,7 @@ class ENGINE_DATA{
         uint8_t v_batt = 0;
         #ifdef MANUAL_GEARBOX
         int rpm = 0;
+        int rpm_sampled=0;
         uint8_t ReverseEngaged = 0xFF;
         uint8_t ParkingBrakeEngaged = 0xFF;
         #endif

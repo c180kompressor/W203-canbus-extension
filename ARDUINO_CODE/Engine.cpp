@@ -164,14 +164,16 @@ const char* ENGINE_DATA::getMPG() {
     }
     if (millis() - lastMpgTime >= 1000) {
         lastMpgTime = millis();
-        //if(this->)
         if (this->speed_km == 0) {
             #ifdef REGION_UK
                 sprintf(buffer, "0.0 MPG"); 
             #elif defined(REGION_US)
                 sprintf(buffer, "0.0 MPG");
             #else
-                sprintf(buffer, "Inf l/100"); 
+                float l_per_hour = 3600.0 * (this->consumption / 1000000.0);
+                char str[7];
+                dtostrf(l_per_hour, 4, 1, str);
+                sprintf(buffer, "%sl/h",str); 
             #endif
         } else if (this->consumption == 0) {
             #ifdef REGION_UK
